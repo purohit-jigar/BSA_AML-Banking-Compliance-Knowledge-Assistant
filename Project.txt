@@ -1,0 +1,7 @@
+BSA/AML Banking Compliance Knowledge Assistant 
+• Built a banking compliance RAG assistant over public BSA/AML guidance, including the FFIEC BSA/AML Examination 
+Manual and FinCEN guidance, using LangChain, FAISS, and Amazon Bedrock for citation-grounded question answering. 
+• Integrated RAGAS evaluation and Guardrails AI validation to assess retrieval quality, reduce unsupported responses, and 
+enforce response-safety controls for compliance-oriented use cases. 
+• Fine-tuned a sentence-transformers embedding model using synthetic domain-specific question–passage pairs, improving 
+retrieval recall@5 by 18% over the base model, and exposed the application through FastAPI on AWS.
