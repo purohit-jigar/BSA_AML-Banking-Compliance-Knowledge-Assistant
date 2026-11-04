@@ -2,7 +2,9 @@
 setup:
 	uv sync
 download:
-	uv run python -m bsa_aml.download
+	bash scripts/download_ffiec.sh
+	bash scripts/download_ecfr.sh
+	uv run python -m bsa_aml.fincen
 ingest:
 	uv run python -m bsa_aml.ingest
 test:
