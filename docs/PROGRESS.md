@@ -1,6 +1,6 @@
 # Progress & Next Steps
 
-_Last updated: 2026-11-05 (after baseline retrieval + eval harness). Read this first when resuming._
+_Last updated: 2026-11-05 (after baseline retrieval, eval harness, test-set review). Read this first when resuming._
 
 ## Project
 Citation-grounded BSA/AML RAG assistant (see `Project.txt`): LangChain + FAISS + Bedrock, RAGAS +
@@ -43,9 +43,9 @@ rewritten to match whatever is measured).
 | Ingest + chunking -> `data/processed/chunks.jsonl` | **done: 5,341 chunks** (FFIEC 662, eCFR 505, FinCEN 4,174) after FinCEN cleanup (`clean.py`); report in `data/processed/ingest_report.json` |
 | FinCEN spot-check + old-advisory policy | **done 2026-11-05**: dropped 1,896 old-advisory, 188 footnote, 132 tiny, 72 garbled chunks; headings normalized |
 | Baseline retrieval (`retrieval.py`): `bge-small-en-v1.5` + FAISS index, BM25, hybrid RRF | **done**; index built at `data/index/base/` (gitignored; rebuild via `python -m bsa_aml.retrieval build`) |
-| Draft 50-question test set (`eval/test_questions.jsonl`; 20 regulation / 19 exam / 11 guidance), all `status: "draft"` | **drafted by Claude, NOT yet reviewed/frozen by you** |
+| Draft 50-question test set (`eval/test_questions.jsonl`; 20 regulation / 19 exam / 11 guidance), all `status: "draft"` | **drafted by Claude; gold labels revised 2026-11-05 after a review (commit 0a783e7); still NOT reviewed/frozen by you** |
 | Gold resolution (`evalset.py`): gold = chunks in gold doc/section containing all `must` keywords; `python -m bsa_aml.evalset` lists questions with no resolvable gold | done |
-| Eval harness (`evaluate.py`): recall@1/5/10 + MRR@10 for dense/bm25/hybrid -> `eval/results/<label>-<index>.json` (records question-file sha256 + frozen flag) | done; **no results file yet** (`eval/results/` is empty) |
+| Eval harness (`evaluate.py`): recall@1/5/10 + MRR@10 for dense/bm25/hybrid -> `eval/results/<label>-<index>.json` (records question-file sha256 + frozen flag) | done. `eval/results/draft-base.json` (2026-11-05, hybrid R@5 0.74 / dense 0.72 / BM25 0.56) was run on the OLD gold and is **stale**; not a baseline |
 | Tests | 6 passing (`uv run pytest`); none yet for retrieval/eval modules |
 
 Code: `src/bsa_aml/` -> `chunking.py`, `parse_pdf.py`, `parse_ecfr.py`, `parse_fincen.py`,
@@ -76,12 +76,24 @@ same curl calls were run by hand and worked). `make download` chains them with t
 1. ~~Spot-check FinCEN chunks~~ done.
 2. Test the two download scripts end to end (or delete `data/raw` and run `make download`).
 3. ~~Baseline dense retrieval + BM25 + hybrid~~ done (index built).
-4. **Review the 50 draft questions (you):** edit wording, check/own gold sections and `must`
-   keywords, run `python -m bsa_aml.evalset` to confirm every question resolves to gold chunks,
-   then set every `status` to `"frozen"`. Only then run
-   `uv run python -m bsa_aml.evaluate --label baseline` and record baseline recall@5
-   (dense / BM25 / hybrid). A draft-set run is NOT the baseline (the harness warns). Consider
-   running once on the draft only to sanity-check the pipeline, labelled `draft`.
+4. **Finish the test set (you), then freeze.** Draft review done 2026-11-05; gold tightened for
+   loose exam/guidance questions (q24, 30, 32, 40-44, 46) and widened with same-scope FFIEC/FinCEN
+   alternates for regulation questions (q02, 04, 07, 08, 13-16); q05/q17 fixed. Still to do:
+   - Verify the added gold chunks by reading them. The widening was chosen after seeing retrieval
+     output, so the jump in regulation recall is partly circular; do not trust it unreviewed.
+     Candidate numbers (not committed as results): dense R@5 0.88, hybrid 0.80, BM25 0.56.
+   - Open items: q42 (4 gold chunks, check "Question 26: Foreign financial institutions"), q13
+     (one MSB-guide chunk may mention $2,000 only in passing), q02 (bank question, generic
+     financial-institution gold), q39 (untouched, check it is the retention chunk).
+   - True retrieval misses in all modes, left as is: q17, q19 (Form 8300 "15 days" not in top 10),
+     q20, q29, q44. CFR text loses to FinCEN FAQs/advisories (FinCEN is 78% of chunks); consider a
+     source-type signal later.
+   - Rewrite ~10-15 questions in your own words (plan says the set is user-written).
+   - Record each question's gold section so the fine-tuning train/test split by section can
+     exclude them.
+   - Then set every `status` to `"frozen"`, run `python -m bsa_aml.evalset`, and run
+     `uv run python -m bsa_aml.evaluate --label baseline`. Only that run is the baseline
+     (the harness warns on unfrozen sets).
 5. Synthetic pair generation (cheap Bedrock model) -> filter -> split by section -> fine-tune ->
    re-evaluate on both test sets. Needs: AWS CLI installed, `aws configure` with a least-privilege
    IAM user (not root), Bedrock model access in us-east-1.
