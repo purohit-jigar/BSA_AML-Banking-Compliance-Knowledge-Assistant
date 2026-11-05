@@ -1,6 +1,6 @@
 # Progress & Next Steps
 
-_Last updated: 2026-11-04. Read this first when resuming._
+_Last updated: 2026-11-05. Read this first when resuming._
 
 ## Project
 Citation-grounded BSA/AML RAG assistant (see `Project.txt`): LangChain + FAISS + Bedrock, RAGAS +
@@ -40,7 +40,8 @@ rewritten to match whatever is measured).
 |---|---|
 | Repo skeleton (`pyproject.toml`, Makefile, dirs, `.gitignore`) | done |
 | Download: FFIEC (81 PDFs, 363 pp), eCFR (14 parts, as of 2026-11-02), FinCEN (331 pages, ~590 PDFs) | done; manifest at `data/raw/manifest.json` (1,012 records) |
-| Ingest + chunking -> `data/processed/chunks.jsonl` | **done: 7,629 chunks** (FFIEC 662, eCFR 505, FinCEN 6,462); report in `data/processed/ingest_report.json` |
+| Ingest + chunking -> `data/processed/chunks.jsonl` | **done: 5,341 chunks** (FFIEC 662, eCFR 505, FinCEN 4,174) after FinCEN cleanup (`clean.py`); report in `data/processed/ingest_report.json` |
+| FinCEN spot-check + old-advisory policy | **done 2026-11-05**: dropped 1,896 old-advisory, 188 footnote, 132 tiny, 72 garbled chunks; headings normalized |
 | Tests | 6 passing (`uv run pytest`) |
 
 Code: `src/bsa_aml/` -> `chunking.py`, `parse_pdf.py`, `parse_ecfr.py`, `parse_fincen.py`,
@@ -56,17 +57,17 @@ same curl calls were run by hand and worked). `make download` chains them with t
 - eCFR needs `--compressed` and a pinned as-of date; Part 1032 is an empty placeholder (excluded).
 - Two 2014 FFIEC files are in `data/raw/ffiec_legacy/` (not in the manifest, not ingested).
 - Three FFIEC appendices (I, N, S) are flowcharts -> zero chunks, intentionally.
-- **FinCEN is 85% of the chunks (6,462 of 7,629).** Includes many older advisories, which may be
-  superseded. Decide whether to date-filter, down-weight, or cap them before indexing.
+- **Old-advisory policy (implemented in `clean.py`):** guidance/FAQs/rulings always kept; advisories
+  >=2016 kept; advisories <2016 (or undated) kept only if they have typology/red-flag content and are
+  not FATF-jurisdiction/UNSC/G20/withdrawal notices. Kept old ones carry `superseded_note` (surface it
+  in citations/answers). FinCEN is now 78% of chunks (4,174 of 5,341).
 - FinCEN ingest skipped 265 items: 234 duplicate PDFs (same sha256), 19 HTML pages that duplicate
   their PDF, 12 non-English. Word counts are used as a proxy for tokens.
-- **FinCEN output has not been spot-checked yet** (heading detection on PDFs, HTML junk removal,
-  title quality). Do this first.
+- Residual: advisory-titled docs that bundle attachments (e.g. FIN-2014-A002 holding a 2008 guidance) keep odd titles; `clean.py` thresholds are heuristics, re-sample if retrieval looks off.
 - A MuPDF warning ("No default Layer config") appeared on one PDF; harmless so far.
 
 ## Next steps (in order)
-1. **Spot-check FinCEN chunks** (sample ~20 across guidance/advisory, PDF/HTML); fix parser issues;
-   decide the old-advisory policy (see above). Re-run `uv run python -m bsa_aml.ingest`.
+1. ~~Spot-check FinCEN chunks~~ done.
 2. Test the two download scripts end to end (or delete `data/raw` and run `make download`).
 3. **Baseline dense retrieval:** embed chunks with `bge-small-en-v1.5`, build FAISS index, add BM25.
 4. **Write the 50 hand-written questions** (you): each with gold section(s). I can draft; you edit

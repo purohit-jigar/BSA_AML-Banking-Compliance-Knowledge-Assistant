@@ -15,6 +15,7 @@ from pathlib import Path
 import pymupdf
 
 from .chunking import chunk_section
+from .clean import clean_fincen
 from .parse_ecfr import parse_ecfr
 from .parse_fincen import page_info, parse_html
 from .parse_pdf import parse_pdf
@@ -185,6 +186,10 @@ def main() -> None:
                     n_chunks += 1
         report["by_source"][key] = {"docs": n_docs, "chunks": n_chunks}
         print(key, report["by_source"][key])
+    dropped = collections.Counter()
+    chunks = clean_fincen(chunks, dropped)
+    report["cleanup_dropped"] = dict(dropped)
+    print("cleanup dropped", dict(dropped))
     with out_path.open("w", encoding="utf-8") as f:
         for c in chunks:
             f.write(json.dumps(c, ensure_ascii=False) + "\n")
