@@ -2,17 +2,17 @@
   "label": "draft",
   "index": "base",
   "embedding_model": "BAAI/bge-small-en-v1.5",
-  "created": "2026-11-05T22:05:38+00:00",
-  "questions_sha256": "10bc7e0c25ecbb72a7891caa2f32512df6ade9389c9c4f0da941444cbc3ecfaa",
+  "created": "2026-11-05T22:14:46+00:00",
+  "questions_sha256": "115e188261d0340874da1a57f966379973355965d314fd623d6bb53915417f71",
   "n_questions": 50,
   "questions_frozen": false,
   "modes": {
     "dense": {
       "overall": {
         "recall@1": 0.5,
-        "recall@5": 0.72,
-        "recall@10": 0.8,
-        "mrr@10": 0.6069,
+        "recall@5": 0.88,
+        "recall@10": 0.94,
+        "mrr@10": 0.6569,
         "n": 50
       },
       "by_type": {
@@ -24,29 +24,21 @@
           "n": 19
         },
         "guidance": {
-          "recall@1": 0.6364,
+          "recall@1": 0.4545,
           "recall@5": 0.9091,
           "recall@10": 0.9091,
-          "mrr@10": 0.7576,
+          "mrr@10": 0.6439,
           "n": 11
         },
         "regulation": {
-          "recall@1": 0.05,
-          "recall@5": 0.45,
-          "recall@10": 0.55,
-          "mrr@10": 0.235,
+          "recall@1": 0.15,
+          "recall@5": 0.85,
+          "recall@10": 0.9,
+          "mrr@10": 0.4225,
           "n": 20
         }
       },
       "misses_at_5": [
-        "q02",
-        "q04",
-        "q07",
-        "q08",
-        "q13",
-        "q14",
-        "q15",
-        "q16",
         "q17",
         "q19",
         "q20",
@@ -64,8 +56,8 @@
         {
           "id": "q02",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 3,
+          "n_gold": 2
         },
         {
           "id": "q03",
@@ -76,14 +68,14 @@
         {
           "id": "q04",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 2,
+          "n_gold": 2
         },
         {
           "id": "q05",
           "type": "regulation",
           "rank": 3,
-          "n_gold": 2
+          "n_gold": 1
         },
         {
           "id": "q06",
@@ -94,14 +86,14 @@
         {
           "id": "q07",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 3,
+          "n_gold": 3
         },
         {
           "id": "q08",
           "type": "regulation",
-          "rank": 6,
-          "n_gold": 2
+          "rank": 1,
+          "n_gold": 7
         },
         {
           "id": "q09",
@@ -130,32 +122,32 @@
         {
           "id": "q13",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 4,
+          "n_gold": 6
         },
         {
           "id": "q14",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 1,
+          "n_gold": 3
         },
         {
           "id": "q15",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 4,
+          "n_gold": 3
         },
         {
           "id": "q16",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 2
+          "rank": 4,
+          "n_gold": 6
         },
         {
           "id": "q17",
           "type": "regulation",
           "rank": null,
-          "n_gold": 3
+          "n_gold": 2
         },
         {
           "id": "q18",
@@ -197,7 +189,7 @@
           "id": "q24",
           "type": "exam",
           "rank": 1,
-          "n_gold": 12
+          "n_gold": 7
         },
         {
           "id": "q25",
@@ -227,13 +219,13 @@
           "id": "q29",
           "type": "exam",
           "rank": 7,
-          "n_gold": 9
+          "n_gold": 6
         },
         {
           "id": "q30",
           "type": "exam",
           "rank": 1,
-          "n_gold": 17
+          "n_gold": 3
         },
         {
           "id": "q31",
@@ -245,7 +237,7 @@
           "id": "q32",
           "type": "exam",
           "rank": 1,
-          "n_gold": 47
+          "n_gold": 18
         },
         {
           "id": "q33",
@@ -293,25 +285,25 @@
           "id": "q40",
           "type": "guidance",
           "rank": 2,
-          "n_gold": 26
+          "n_gold": 9
         },
         {
           "id": "q41",
           "type": "guidance",
           "rank": 1,
-          "n_gold": 31
+          "n_gold": 14
         },
         {
           "id": "q42",
           "type": "guidance",
-          "rank": 1,
-          "n_gold": 53
+          "rank": 4,
+          "n_gold": 4
         },
         {
           "id": "q43",
           "type": "guidance",
-          "rank": 1,
-          "n_gold": 15
+          "rank": 2,
+          "n_gold": 7
         },
         {
           "id": "q44",
@@ -329,7 +321,7 @@
           "id": "q46",
           "type": "guidance",
           "rank": 1,
-          "n_gold": 23
+          "n_gold": 8
         },
         {
           "id": "q47",
@@ -359,32 +351,32 @@
     },
     "bm25": {
       "overall": {
-        "recall@1": 0.26,
+        "recall@1": 0.24,
         "recall@5": 0.56,
-        "recall@10": 0.68,
-        "mrr@10": 0.3869,
+        "recall@10": 0.72,
+        "mrr@10": 0.3778,
         "n": 50
       },
       "by_type": {
         "exam": {
-          "recall@1": 0.3158,
+          "recall@1": 0.2632,
           "recall@5": 0.7368,
           "recall@10": 0.8947,
-          "mrr@10": 0.4856,
+          "mrr@10": 0.4461,
           "n": 19
         },
         "guidance": {
-          "recall@1": 0.5455,
-          "recall@5": 0.7273,
-          "recall@10": 0.9091,
-          "mrr@10": 0.6645,
+          "recall@1": 0.4545,
+          "recall@5": 0.6364,
+          "recall@10": 0.8182,
+          "mrr@10": 0.5736,
           "n": 11
         },
         "regulation": {
-          "recall@1": 0.05,
-          "recall@5": 0.3,
-          "recall@10": 0.35,
-          "mrr@10": 0.1406,
+          "recall@1": 0.1,
+          "recall@5": 0.35,
+          "recall@10": 0.5,
+          "mrr@10": 0.2051,
           "n": 20
         }
       },
@@ -397,7 +389,6 @@
         "q10",
         "q12",
         "q13",
-        "q14",
         "q15",
         "q16",
         "q17",
@@ -408,6 +399,7 @@
         "q29",
         "q37",
         "q39",
+        "q42",
         "q44",
         "q48",
         "q49"
@@ -423,7 +415,7 @@
           "id": "q02",
           "type": "regulation",
           "rank": null,
-          "n_gold": 1
+          "n_gold": 2
         },
         {
           "id": "q03",
@@ -435,13 +427,13 @@
           "id": "q04",
           "type": "regulation",
           "rank": null,
-          "n_gold": 1
+          "n_gold": 2
         },
         {
           "id": "q05",
           "type": "regulation",
           "rank": 5,
-          "n_gold": 2
+          "n_gold": 1
         },
         {
           "id": "q06",
@@ -453,13 +445,13 @@
           "id": "q07",
           "type": "regulation",
           "rank": null,
-          "n_gold": 1
+          "n_gold": 3
         },
         {
           "id": "q08",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 2
+          "rank": 6,
+          "n_gold": 7
         },
         {
           "id": "q09",
@@ -488,32 +480,32 @@
         {
           "id": "q13",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 8,
+          "n_gold": 6
         },
         {
           "id": "q14",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 1,
+          "n_gold": 3
         },
         {
           "id": "q15",
           "type": "regulation",
           "rank": null,
-          "n_gold": 1
+          "n_gold": 3
         },
         {
           "id": "q16",
           "type": "regulation",
           "rank": null,
-          "n_gold": 2
+          "n_gold": 6
         },
         {
           "id": "q17",
           "type": "regulation",
           "rank": null,
-          "n_gold": 3
+          "n_gold": 2
         },
         {
           "id": "q18",
@@ -555,7 +547,7 @@
           "id": "q24",
           "type": "exam",
           "rank": 4,
-          "n_gold": 12
+          "n_gold": 7
         },
         {
           "id": "q25",
@@ -585,13 +577,13 @@
           "id": "q29",
           "type": "exam",
           "rank": null,
-          "n_gold": 9
+          "n_gold": 6
         },
         {
           "id": "q30",
           "type": "exam",
-          "rank": 1,
-          "n_gold": 17
+          "rank": 4,
+          "n_gold": 3
         },
         {
           "id": "q31",
@@ -603,7 +595,7 @@
           "id": "q32",
           "type": "exam",
           "rank": 2,
-          "n_gold": 47
+          "n_gold": 18
         },
         {
           "id": "q33",
@@ -651,25 +643,25 @@
           "id": "q40",
           "type": "guidance",
           "rank": 2,
-          "n_gold": 26
+          "n_gold": 9
         },
         {
           "id": "q41",
           "type": "guidance",
           "rank": 1,
-          "n_gold": 31
+          "n_gold": 14
         },
         {
           "id": "q42",
           "type": "guidance",
-          "rank": 1,
-          "n_gold": 53
+          "rank": null,
+          "n_gold": 4
         },
         {
           "id": "q43",
           "type": "guidance",
           "rank": 2,
-          "n_gold": 15
+          "n_gold": 7
         },
         {
           "id": "q44",
@@ -687,7 +679,7 @@
           "id": "q46",
           "type": "guidance",
           "rank": 1,
-          "n_gold": 23
+          "n_gold": 8
         },
         {
           "id": "q47",
@@ -717,48 +709,45 @@
     },
     "hybrid": {
       "overall": {
-        "recall@1": 0.5,
-        "recall@5": 0.74,
-        "recall@10": 0.76,
-        "mrr@10": 0.595,
+        "recall@1": 0.46,
+        "recall@5": 0.8,
+        "recall@10": 0.9,
+        "mrr@10": 0.6143,
         "n": 50
       },
       "by_type": {
         "exam": {
-          "recall@1": 0.7895,
+          "recall@1": 0.7368,
           "recall@5": 0.9474,
           "recall@10": 0.9474,
-          "mrr@10": 0.8596,
+          "mrr@10": 0.8333,
           "n": 19
         },
         "guidance": {
-          "recall@1": 0.6364,
-          "recall@5": 0.9091,
+          "recall@1": 0.4545,
+          "recall@5": 0.8182,
           "recall@10": 0.9091,
-          "mrr@10": 0.7303,
+          "mrr@10": 0.6069,
           "n": 11
         },
         "regulation": {
-          "recall@1": 0.15,
-          "recall@5": 0.45,
-          "recall@10": 0.5,
-          "mrr@10": 0.2692,
+          "recall@1": 0.2,
+          "recall@5": 0.65,
+          "recall@10": 0.85,
+          "mrr@10": 0.4102,
           "n": 20
         }
       },
       "misses_at_5": [
         "q02",
-        "q04",
         "q07",
-        "q08",
-        "q13",
-        "q14",
         "q15",
         "q16",
         "q17",
         "q19",
         "q20",
         "q29",
+        "q42",
         "q44"
       ],
       "per_question": [
@@ -771,8 +760,8 @@
         {
           "id": "q02",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 6,
+          "n_gold": 2
         },
         {
           "id": "q03",
@@ -783,14 +772,14 @@
         {
           "id": "q04",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 3,
+          "n_gold": 2
         },
         {
           "id": "q05",
           "type": "regulation",
           "rank": 3,
-          "n_gold": 2
+          "n_gold": 1
         },
         {
           "id": "q06",
@@ -801,14 +790,14 @@
         {
           "id": "q07",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 6,
+          "n_gold": 3
         },
         {
           "id": "q08",
           "type": "regulation",
-          "rank": 10,
-          "n_gold": 2
+          "rank": 2,
+          "n_gold": 7
         },
         {
           "id": "q09",
@@ -837,32 +826,32 @@
         {
           "id": "q13",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 2,
+          "n_gold": 6
         },
         {
           "id": "q14",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 1,
+          "n_gold": 3
         },
         {
           "id": "q15",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 1
+          "rank": 7,
+          "n_gold": 3
         },
         {
           "id": "q16",
           "type": "regulation",
-          "rank": null,
-          "n_gold": 2
+          "rank": 9,
+          "n_gold": 6
         },
         {
           "id": "q17",
           "type": "regulation",
           "rank": null,
-          "n_gold": 3
+          "n_gold": 2
         },
         {
           "id": "q18",
@@ -904,7 +893,7 @@
           "id": "q24",
           "type": "exam",
           "rank": 1,
-          "n_gold": 12
+          "n_gold": 7
         },
         {
           "id": "q25",
@@ -934,13 +923,13 @@
           "id": "q29",
           "type": "exam",
           "rank": null,
-          "n_gold": 9
+          "n_gold": 6
         },
         {
           "id": "q30",
           "type": "exam",
-          "rank": 1,
-          "n_gold": 17
+          "rank": 2,
+          "n_gold": 3
         },
         {
           "id": "q31",
@@ -952,7 +941,7 @@
           "id": "q32",
           "type": "exam",
           "rank": 1,
-          "n_gold": 47
+          "n_gold": 18
         },
         {
           "id": "q33",
@@ -1000,25 +989,25 @@
           "id": "q40",
           "type": "guidance",
           "rank": 1,
-          "n_gold": 26
+          "n_gold": 9
         },
         {
           "id": "q41",
           "type": "guidance",
           "rank": 1,
-          "n_gold": 31
+          "n_gold": 14
         },
         {
           "id": "q42",
           "type": "guidance",
-          "rank": 1,
-          "n_gold": 53
+          "rank": 7,
+          "n_gold": 4
         },
         {
           "id": "q43",
           "type": "guidance",
-          "rank": 1,
-          "n_gold": 15
+          "rank": 2,
+          "n_gold": 7
         },
         {
           "id": "q44",
@@ -1036,7 +1025,7 @@
           "id": "q46",
           "type": "guidance",
           "rank": 1,
-          "n_gold": 23
+          "n_gold": 8
         },
         {
           "id": "q47",
