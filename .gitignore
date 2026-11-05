@@ -6,3 +6,6 @@ data/processed/*
 models/
 *.faiss
 .env
+
+# Built retrieval indexes (rebuild: python -m bsa_aml.retrieval build)
+data/index/

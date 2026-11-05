@@ -42,7 +42,7 @@ rewritten to match whatever is measured).
 | Download: FFIEC (81 PDFs, 363 pp), eCFR (14 parts, as of 2026-11-02), FinCEN (331 pages, ~590 PDFs) | done; manifest at `data/raw/manifest.json` (1,012 records) |
 | Ingest + chunking -> `data/processed/chunks.jsonl` | **done: 5,341 chunks** (FFIEC 662, eCFR 505, FinCEN 4,174) after FinCEN cleanup (`clean.py`); report in `data/processed/ingest_report.json` |
 | FinCEN spot-check + old-advisory policy | **done 2026-11-05**: dropped 1,896 old-advisory, 188 footnote, 132 tiny, 72 garbled chunks; headings normalized |
-| Baseline retrieval (`retrieval.py`): `bge-small-en-v1.5` + FAISS index, BM25, hybrid RRF | **done**; index built at `data/index/base/` (currently untracked, not in `.gitignore` (decide: ignore it); rebuild via `python -m bsa_aml.retrieval build`) |
+| Baseline retrieval (`retrieval.py`): `bge-small-en-v1.5` + FAISS index, BM25, hybrid RRF | **done**; index built at `data/index/base/` (gitignored; rebuild via `python -m bsa_aml.retrieval build`) |
 | Draft 50-question test set (`eval/test_questions.jsonl`; 20 regulation / 19 exam / 11 guidance), all `status: "draft"` | **drafted by Claude, NOT yet reviewed/frozen by you** |
 | Gold resolution (`evalset.py`): gold = chunks in gold doc/section containing all `must` keywords; `python -m bsa_aml.evalset` lists questions with no resolvable gold | done |
 | Eval harness (`evaluate.py`): recall@1/5/10 + MRR@10 for dense/bm25/hybrid -> `eval/results/<label>-<index>.json` (records question-file sha256 + frozen flag) | done; **no results file yet** (`eval/results/` is empty) |
