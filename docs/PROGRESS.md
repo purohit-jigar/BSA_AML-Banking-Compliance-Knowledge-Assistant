@@ -45,7 +45,7 @@ rewritten to match whatever is measured).
 | Baseline retrieval (`retrieval.py`): `bge-small-en-v1.5` + FAISS index, BM25, hybrid RRF | **done**; index built at `data/index/base/` (gitignored; rebuild via `python -m bsa_aml.retrieval build`) |
 | Draft 50-question test set (`eval/test_questions.jsonl`; 20 regulation / 19 exam / 11 guidance), all `status: "draft"` | **drafted by Claude; gold labels revised 2026-11-05 after a review (commit 0a783e7); still NOT reviewed/frozen by you** |
 | Gold resolution (`evalset.py`): gold = chunks in gold doc/section containing all `must` keywords; `python -m bsa_aml.evalset` lists questions with no resolvable gold | done |
-| Eval harness (`evaluate.py`): recall@1/5/10 + MRR@10 for dense/bm25/hybrid -> `eval/results/<label>-<index>.json` (records question-file sha256 + frozen flag) | done. `eval/results/draft-base.json` (2026-11-05, hybrid R@5 0.74 / dense 0.72 / BM25 0.56) was run on the OLD gold and is **stale**; not a baseline |
+| Eval harness (`evaluate.py`): recall@1/5/10 + MRR@10 for dense/bm25/hybrid -> `eval/results/<label>-<index>.json` (records question-file sha256 + frozen flag) | done. `eval/results/draft-base.json` re-run 2026-11-05 on the revised gold (commit 9821266), set still draft so **not a baseline**: dense R@5 0.88 / MRR 0.657, hybrid 0.80 / 0.614, BM25 0.56 / 0.378 |
 | Tests | 6 passing (`uv run pytest`); none yet for retrieval/eval modules |
 
 Code: `src/bsa_aml/` -> `chunking.py`, `parse_pdf.py`, `parse_ecfr.py`, `parse_fincen.py`,
@@ -72,6 +72,14 @@ same curl calls were run by hand and worked). `make download` chains them with t
 - Residual: advisory-titled docs that bundle attachments (e.g. FIN-2014-A002 holding a 2008 guidance) keep odd titles; `clean.py` thresholds are heuristics, re-sample if retrieval looks off.
 - A MuPDF warning ("No default Layer config") appeared on one PDF; harmless so far.
 
+## Findings so far (draft set, not final)
+- Dense beats hybrid at R@5 (0.88 vs 0.80); hybrid loses q02, q07, q15, q16, q42 that dense gets.
+- BM25 tokenizer is not the cause: keeping numbers whole, stopword removal and stemming did not
+  improve hybrid (best BM25 R@5 0.62, hybrid 0.78-0.80). Questions are paraphrases of regulatory
+  text, so keyword overlap is low. `retrieval.py` left unchanged.
+- Do not tune RRF weights or add a reranker against the draft set (gold was edited after seeing
+  retrieval output); try them after the set is frozen and report dense/BM25/hybrid separately.
+
 ## Next steps (in order)
 1. ~~Spot-check FinCEN chunks~~ done.
 2. Test the two download scripts end to end (or delete `data/raw` and run `make download`).
@@ -81,7 +89,7 @@ same curl calls were run by hand and worked). `make download` chains them with t
    alternates for regulation questions (q02, 04, 07, 08, 13-16); q05/q17 fixed. Still to do:
    - Verify the added gold chunks by reading them. The widening was chosen after seeing retrieval
      output, so the jump in regulation recall is partly circular; do not trust it unreviewed.
-     Candidate numbers (not committed as results): dense R@5 0.88, hybrid 0.80, BM25 0.56.
+     Draft-run numbers are in the eval row above (regulation R@5: dense 0.85, hybrid 0.65, BM25 0.35).
    - Open items: q42 (4 gold chunks, check "Question 26: Foreign financial institutions"), q13
      (one MSB-guide chunk may mention $2,000 only in passing), q02 (bank question, generic
      financial-institution gold), q39 (untouched, check it is the retention chunk).
