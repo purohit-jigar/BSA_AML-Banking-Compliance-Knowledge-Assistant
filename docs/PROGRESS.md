@@ -46,11 +46,12 @@ rewritten to match whatever is measured).
 | Draft 50-question test set (`eval/test_questions.jsonl`; 20 regulation / 19 exam / 11 guidance), all `status: "draft"` | **drafted by Claude; gold labels revised 2026-11-05 after a review (commit 0a783e7); still NOT reviewed/frozen by you** |
 | Gold resolution (`evalset.py`): gold = chunks in gold doc/section containing all `must` keywords; `python -m bsa_aml.evalset` lists questions with no resolvable gold | done |
 | Eval harness (`evaluate.py`): recall@1/5/10 + MRR@10 for dense/bm25/hybrid -> `eval/results/<label>-<index>.json` (records question-file sha256 + frozen flag) | done. `eval/results/draft-base.json` re-run 2026-11-05 on the revised gold (commit 9821266), set still draft so **not a baseline**: dense R@5 0.88 / MRR 0.657, hybrid 0.80 / 0.614, BM25 0.56 / 0.378 |
-| Tests | 6 passing (`uv run pytest`); none yet for retrieval/eval modules |
+| Synthetic pair pipeline, offline parts (`pairs.py`: held-out section split, per-source sampling, resumable generate/judge/filter/handcheck, `plan` dry-run) | **built + tested 2026-11-05 (commit 803d2ca); never run against Bedrock** |
+| Tests | 12 passing (`uv run pytest`): original 6 + 6 for `pairs.py`; none yet for retrieval/eval modules |
 
 Code: `src/bsa_aml/` -> `chunking.py`, `parse_pdf.py`, `parse_ecfr.py`, `parse_fincen.py`,
 `ingest.py`, `clean.py`, `fincen.py` (crawler), `register_ffiec.py`, `register_ecfr.py`,
-`retrieval.py`, `evalset.py`, `evaluate.py`. `scripts/make_questions.py` generated the draft
+`retrieval.py`, `evalset.py`, `evaluate.py`, `pairs.py`. `scripts/make_questions.py` generated the draft
 questions (one-off; do NOT re-run, it would overwrite your edits).
 Downloads: `scripts/download_ffiec.sh`, `scripts/download_ecfr.sh` (**untested as scripts**; the
 same curl calls were run by hand and worked). `make download` chains them with the FinCEN crawler.
@@ -102,9 +103,18 @@ same curl calls were run by hand and worked). `make download` chains them with t
    - Then set every `status` to `"frozen"`, run `python -m bsa_aml.evalset`, and run
      `uv run python -m bsa_aml.evaluate --label baseline`. Only that run is the baseline
      (the harness warns on unfrozen sets).
-5. Synthetic pair generation (cheap Bedrock model) -> filter -> split by section -> fine-tune ->
-   re-evaluate on both test sets. Needs: AWS CLI installed, `aws configure` with a least-privilege
-   IAM user (not root), Bedrock model access in us-east-1.
+5. **Synthetic pair generation** (offline code done). Blocked on AWS: install AWS CLI,
+   `aws configure` with a least-privilege IAM user (not root; keys typed by you, never pasted in
+   chat), enable Bedrock model access in us-east-1, pick TWO different models (generator, judge).
+   Then: `python -m bsa_aml.pairs plan --price-in X --price-out Y` (prices from the Bedrock console)
+   -> `generate --gen-model <id> --limit 20` and read the 20 questions -> full `generate` ->
+   `judge --judge-model <id>` -> `filter` -> `handcheck` (you review 50 pairs) -> fine-tune ->
+   re-evaluate on both test sets. Plan for 1,500 pairs: ~0.66M input / 45k output tokens to
+   generate, ~0.72M / 60k to judge; sample is 415 FFIEC / 369 eCFR / 716 FinCEN (balanced on
+   purpose; the pool is ~86% FinCEN). `filter` re-applies the held-out split from the current
+   test set, so editing gold after generating cannot leak. `data/pairs/raw.jsonl` and
+   `judged.jsonl` are gitignored; `pairs.jsonl` and `handcheck.md` are meant to be committed.
+   Fine-tuning still compares against the baseline, so freeze the test set (step 4) first.
 6. Generation chain with citations + refusal threshold -> Guardrails AI -> RAGAS golden set + report.
 7. FastAPI -> IaC + App Runner deploy -> README, architecture diagram, demo, cost notes.
 
