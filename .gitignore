@@ -9,3 +9,7 @@ models/
 
 # Built retrieval indexes (rebuild: python -m bsa_aml.retrieval build)
 data/index/
+
+# Intermediate synthetic-pair outputs (pairs.jsonl and handcheck.md are kept)
+data/pairs/raw.jsonl
+data/pairs/judged.jsonl
